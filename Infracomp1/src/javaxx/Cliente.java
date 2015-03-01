@@ -3,10 +3,12 @@ package javaxx;
 public class Cliente extends Thread{
 
 	private int numeroMensajes;
+	private Buffer buffer;
 	
-	public Cliente(int num ){
+	public Cliente(int num , Buffer b){
 		super();
 		
+		buffer = b;
 		numeroMensajes = num;
 	}
 	

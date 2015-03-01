@@ -6,8 +6,11 @@ import java.util.Properties;
 
 public class Servidor {
 
-
-public Servidor(int num){
+Buffer buffer;
+	
+public Servidor(int num, Buffer b){
+	
+	buffer = b;
 	
 	for(int i = 0; i < num ; i ++){
 		Thread t = new Thread(new Runnable(){
@@ -44,20 +47,22 @@ public Servidor(int num){
 			System.out.println("No se puede leer el archivo X(");
 		}
 		
-		// inicializar servidor
-		
-		Servidor servidor = new Servidor(Integer.parseInt(datos.getProperty("numeroThreads")));
-
 		// inicializar buffer
 		
-		Buffer buffer = new Buffer();
+		Buffer buffer = new Buffer(Integer.parseInt(datos.getProperty("capacidadBuffer")));
+		
+		// inicializar servidor
+		
+		Servidor servidor = new Servidor(Integer.parseInt(datos.getProperty("numeroThreads")),buffer);
+
+
 		
 		//inicializar los clientes 
 		
 		int clientes = Integer.parseInt(datos.getProperty("numeroClientes"));
 		for (int i =0; i < clientes ; i ++){
 			
-			Cliente c = new Cliente(Integer.parseInt(datos.getProperty("numeroMensajes"+i)));
+			Cliente c = new Cliente(Integer.parseInt(datos.getProperty("numeroMensajes"+i)),buffer);
 			
 			c.start();
 		}
