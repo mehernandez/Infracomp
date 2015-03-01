@@ -46,21 +46,21 @@ public Servidor(int num){
 		
 		// inicializar servidor
 		
-//		Servidor servidor = new Servidor(Integer.parseInt(datos.getProperty("numeroThreads")));
-//
-//		// inicializar buffer
-//		
-//		Buffer buffer = new Buffer();
-//		
-//		//inicializar los clientes 
-//		
-//		int clientes = Integer.parseInt(datos.getProperty("numeroClientes"));
-//		for (int i =0; i < clientes ; i ++){
-//			
-//			Cliente c = new Cliente(Integer.parseInt(datos.getProperty("numeroMensajes"+i)));
-//			
-//			c.start();
-//		}
+		Servidor servidor = new Servidor(Integer.parseInt(datos.getProperty("numeroThreads")));
+
+		// inicializar buffer
+		
+		Buffer buffer = new Buffer();
+		
+		//inicializar los clientes 
+		
+		int clientes = Integer.parseInt(datos.getProperty("numeroClientes"));
+		for (int i =0; i < clientes ; i ++){
+			
+			Cliente c = new Cliente(Integer.parseInt(datos.getProperty("numeroMensajes"+i)));
+			
+			c.start();
+		}
 		
 		
 	}
