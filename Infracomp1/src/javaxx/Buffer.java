@@ -20,14 +20,27 @@ public class Buffer {
 	
 	public boolean agregar(Mensaje m){
 		
+		boolean resp = false;
+		
+		
 		if(mensajes.size() <capacidad){
 			mensajes.add(m);
-			return true;
+			resp = true;
+			
+//			try {
+//				wait();
+//			} catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
 		}
-		return false;
+			
+		
+		
+		return resp;
 	}
 	
-	public Mensaje pedir(){
+	public synchronized Mensaje pedir(){
 		if(!mensajes.isEmpty()){
 		   return mensajes.get(0);
 		}

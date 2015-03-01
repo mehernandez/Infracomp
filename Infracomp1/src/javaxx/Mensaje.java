@@ -10,4 +10,8 @@ public class Mensaje {
 		
 	}
 	
+	public void aumentarNumero(){
+		numero ++;
+	}
+	
 }

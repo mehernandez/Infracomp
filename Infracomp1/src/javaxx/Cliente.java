@@ -19,7 +19,16 @@ public class Cliente extends Thread{
 			
 			Mensaje m = new Mensaje();
 			
-			// falta contactar al buffer
+			boolean ya = false;
+			
+			while(!ya){
+			ya = buffer.agregar(m);
+
+			if(!ya){
+				yield();
+			}
+			}
+	
 			
 		}
 	}
