@@ -18,10 +18,22 @@ public Servidor(int num, Buffer b){
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-			// implementar	
+			// implementar
+				Mensaje temp=buffer.pedir();
+				while(temp!=null)
+				{
+					if(temp!=null)
+					{
+						temp.aumentarNumero();
+						System.out.println("se aumento");
+						
+					}
+					temp=buffer.pedir();
+				}
 			}
 			
 		});
+		t.start();
 	}
 	
 }
@@ -44,7 +56,7 @@ public Servidor(int num, Buffer b){
 		}
 		catch( Exception e )
 		{
-			System.out.println("No se puede leer el archivo X(");
+			System.out.println("No se puede leer el archivo :"+arch.getAbsolutePath());
 		}
 		
 		// inicializar buffer

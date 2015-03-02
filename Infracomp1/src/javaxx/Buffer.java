@@ -18,7 +18,7 @@ public class Buffer {
 		
 	}
 	
-	public boolean agregar(Mensaje m){
+	public synchronized boolean agregar(Mensaje m){
 		
 		boolean resp = false;
 		
@@ -26,7 +26,7 @@ public class Buffer {
 		if(mensajes.size() <capacidad){
 			mensajes.add(m);
 			resp = true;
-			
+			System.out.println("se añadió");
 //			try {
 //				wait();
 //			} catch (InterruptedException e) {
@@ -41,7 +41,8 @@ public class Buffer {
 	}
 	
 	public synchronized Mensaje pedir(){
-		if(!mensajes.isEmpty()){
+		if(!mensajes.isEmpty())
+		{
 		   return mensajes.get(0);
 		}
 		return null;

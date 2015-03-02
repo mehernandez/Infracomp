@@ -28,8 +28,6 @@ public class Cliente extends Thread{
 				yield();
 			}
 			}
-	
-			
 		}
 	}
 	

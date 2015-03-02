@@ -12,6 +12,7 @@ public class Mensaje {
 	
 	public void aumentarNumero(){
 		numero ++;
+		System.out.println("Incrementó: "+numero);
 	}
 	
 }
