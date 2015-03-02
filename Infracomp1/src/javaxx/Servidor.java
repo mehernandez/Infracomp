@@ -13,22 +13,21 @@ public Servidor(int num, Buffer b){
 	buffer = b;
 	
 	for(int i = 0; i < num ; i ++){
+		System.out.println("thread: "+i);
 		Thread t = new Thread(new Runnable(){
 
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
 			// implementar
-				Mensaje temp=buffer.pedir();
-				while(temp!=null)
+				while(true)
 				{
+					Mensaje temp=buffer.pedir();
 					if(temp!=null)
 					{
 						temp.aumentarNumero();
-						System.out.println("se aumento");
-						
+//						System.out.println("se aumento");
 					}
-					temp=buffer.pedir();
 				}
 			}
 			

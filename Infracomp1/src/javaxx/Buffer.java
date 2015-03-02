@@ -43,7 +43,9 @@ public class Buffer {
 	public synchronized Mensaje pedir(){
 		if(!mensajes.isEmpty())
 		{
-		   return mensajes.get(0);
+			Mensaje ac=mensajes.get(0);
+			mensajes.remove(0);
+		   return ac;
 		}
 		return null;
 	}

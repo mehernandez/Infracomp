@@ -12,12 +12,17 @@ public class Cliente extends Thread{
 		numeroMensajes = num;
 	}
 	
+	public synchronized void avisar()
+	{
+		
+	}
+	
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
 		for (int i = 0; i < numeroMensajes; i++){
 			
-			Mensaje m = new Mensaje();
+			Mensaje m = new Mensaje(this);
 			
 			boolean ya = false;
 			
