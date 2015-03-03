@@ -4,15 +4,20 @@ public class Mensaje {
 
 	private int numero ;
 	private Cliente id;
+
 	
-	public Mensaje(Cliente dueño){
+	public Mensaje(Cliente dueno){
 		
 		numero = 0;
-		id=dueño;
+		id=dueno;
+		
+		
 	}
+
 	
-	public void aumentarNumero(){
+	public synchronized void aumentarNumero(){
 		numero ++;
+		this.notify();
 //		System.out.println("Incrementó: "+numero);
 	}
 	

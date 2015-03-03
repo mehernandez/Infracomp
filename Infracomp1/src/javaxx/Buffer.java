@@ -27,12 +27,8 @@ public class Buffer {
 			mensajes.add(m);
 			resp = true;
 			System.out.println("se añadió");
-//			try {
-//				wait();
-//			} catch (InterruptedException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
+
+			this.notify();
 		}
 			
 		
@@ -46,6 +42,14 @@ public class Buffer {
 			Mensaje ac=mensajes.get(0);
 			mensajes.remove(0);
 		   return ac;
+		}
+		else{
+			try {
+				this.wait();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return null;
 	}

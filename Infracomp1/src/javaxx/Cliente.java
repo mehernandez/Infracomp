@@ -17,6 +17,28 @@ public class Cliente extends Thread{
 		
 	}
 	
+	public synchronized void enviar(Mensaje m){
+
+        boolean ya = false;
+		
+		while(!ya){
+		ya = buffer.agregar(m);
+
+		if(!ya){
+			yield();
+		}
+		else{
+			try {
+				this.wait();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		}
+	}
+	
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
@@ -24,15 +46,8 @@ public class Cliente extends Thread{
 			
 			Mensaje m = new Mensaje(this);
 			
-			boolean ya = false;
+		   enviar(m);
 			
-			while(!ya){
-			ya = buffer.agregar(m);
-
-			if(!ya){
-				yield();
-			}
-			}
 		}
 	}
 	
