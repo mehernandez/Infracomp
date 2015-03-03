@@ -18,7 +18,7 @@ public class Mensaje {
 	public synchronized void aumentarNumero(){
 		numero ++;
 		this.notify();
-//		System.out.println("Incrementó: "+numero);
+		System.out.println("Incrementó: "+numero);
 	}
 	
 }

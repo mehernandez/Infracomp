@@ -20,7 +20,7 @@ public Servidor(int num, Buffer b){
 			public void run() {
 				// TODO Auto-generated method stub
 			// implementar
-				while(true)
+				while(buffer.mensajes.size()>0)
 				{
 					Mensaje temp=buffer.pedir();
 					if(temp!=null)

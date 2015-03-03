@@ -26,7 +26,7 @@ public class Buffer {
 		if(mensajes.size() <capacidad){
 			mensajes.add(m);
 			resp = true;
-			System.out.println("se añadió");
+//			System.out.println("se añadió");
 
 			this.notify();
 		}
