@@ -7,6 +7,7 @@ public class Buffer {
 
 	List<Mensaje> mensajes ;
 	int capacidad;
+	boolean acabe;
 
 	public Buffer(int num){
 
@@ -15,7 +16,7 @@ public class Buffer {
 		
 		mensajes = new ArrayList<Mensaje>();
 		
-		
+		acabe=false;
 	}
 	
 	public synchronized boolean agregar(Mensaje m){
@@ -52,5 +53,9 @@ public class Buffer {
 			}
 		}
 		return null;
+	}
+	
+	public synchronized boolean acabe(){
+		return acabe;
 	}
 }
