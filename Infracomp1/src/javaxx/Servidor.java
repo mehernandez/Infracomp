@@ -61,7 +61,7 @@ public Servidor(int num, Buffer b){
 		
 		// inicializar buffer
 		
-		Buffer buffer = new Buffer(Integer.parseInt(datos.getProperty("capacidadBuffer")));
+		Buffer buffer = new Buffer(Integer.parseInt(datos.getProperty("capacidadBuffer")),Integer.parseInt(datos.getProperty("numeroClientes")));
 		
 		// inicializar servidor
 		

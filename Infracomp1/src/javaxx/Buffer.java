@@ -5,11 +5,13 @@ import java.util.List;
 
 public class Buffer {
 
-	List<Mensaje> mensajes ;
-	int capacidad;
-	boolean acabe;
+	private List<Mensaje> mensajes ;
+	private int capacidad;
+	private boolean acabe;
+	private int numClientes;
+	
 
-	public Buffer(int num){
+	public Buffer(int num, int numC){
 
 		
 		capacidad = num;
@@ -17,6 +19,8 @@ public class Buffer {
 		mensajes = new ArrayList<Mensaje>();
 		
 		acabe=false;
+		
+		numClientes = numC;
 	}
 	
 	public synchronized boolean agregar(Mensaje m){
@@ -58,4 +62,15 @@ public class Buffer {
 	public synchronized boolean acabe(){
 		return acabe;
 	}
+	
+	public synchronized void notificarSalida(){
+		
+		numClientes --;
+		
+		if(numClientes == 0){
+			acabe = true;
+		}
+		
+	}
+	
 }
