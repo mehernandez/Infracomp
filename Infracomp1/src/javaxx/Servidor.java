@@ -21,10 +21,9 @@ public Servidor(int num, Buffer b){
 				// TODO Auto-generated method stub
 			// implementar
 				
-				Mensaje temp=new Mensaje(null);
-				while(temp!=null)
+				while(buffer.acabe())
 				{
-					temp=buffer.pedir();
+					Mensaje temp=buffer.pedir();
 					if(temp!=null)
 					{
 						temp.aumentarNumero();
