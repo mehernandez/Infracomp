@@ -51,7 +51,7 @@ public Servidor(int num, Buffer b){
 			FileInputStream in = new FileInputStream( arch );
 			datos.load( in );
 			
-			System.out.println(datos.getProperty("numeroClientes"));
+			System.out.println("clientes: "+datos.getProperty("numeroClientes"));
 			
 			in.close( );
 		}

@@ -49,9 +49,9 @@ public class Buffer {
 		}
 		else{
 			try {
-				this.wait();
+				this.wait();  
 //				acabe=true;
-			} catch (InterruptedException e) {
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}

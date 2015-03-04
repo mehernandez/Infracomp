@@ -18,6 +18,7 @@ public class Cliente extends Thread{
 		
 		while(!ya){
 		ya = buffer.agregar(m);
+		System.out.println(ya);
 
 		if(!ya){
 			yield();
