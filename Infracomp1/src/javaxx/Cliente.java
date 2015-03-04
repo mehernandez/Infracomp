@@ -18,7 +18,7 @@ public class Cliente extends Thread{
 		
 		while(!ya){
 		ya = m.enviarse();
-		System.out.println(ya);
+//		System.out.println(ya);
 
 		if(!ya){
 			yield();
