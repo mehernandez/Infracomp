@@ -21,15 +21,15 @@ public Servidor(int num, Buffer b){
 				// TODO Auto-generated method stub
 			// implementar
 				
-				while(!buffer.acabe())
+				while(!buffer.acabe.get())
 				{
 					Mensaje temp=buffer.pedir();
 					if(temp!=null)
 					{
 						temp.aumentarNumero();
-//						System.out.println("se aumento");
 					}
 				}
+				System.out.println("acabe de atender"+buffer.acabe.get());
 			}
 			
 		});
