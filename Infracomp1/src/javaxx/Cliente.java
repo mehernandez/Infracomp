@@ -17,20 +17,13 @@ public class Cliente extends Thread{
         boolean ya = false;
 		
 		while(!ya){
-		ya = buffer.agregar(m);
+		ya = m.enviarse();
 		System.out.println(ya);
 
 		if(!ya){
 			yield();
 		}
-		else{
-			try {
-				this.wait();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+	
 		
 		}
 	}
@@ -40,7 +33,7 @@ public class Cliente extends Thread{
 		// TODO Auto-generated method stub
 		for (int i = 0; i < numeroMensajes; i++){
 			
-			Mensaje m = new Mensaje(this);
+			Mensaje m = new Mensaje(this, buffer);
 			
 		   enviar(m);
 			
