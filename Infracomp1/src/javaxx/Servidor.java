@@ -6,20 +6,22 @@ import java.util.Properties;
 
 public class Servidor {
 
+	// Variable que representa al Buffer
 Buffer buffer;
 	
-public Servidor(int num, Buffer b){
+//Método constructor del servidor 
+public Servidor(int numeroThreads, Buffer pBuffer){
 	
-	buffer = b;
+	buffer = pBuffer;
 	
-	for(int i = 0; i < num ; i ++){
-		System.out.println("thread: "+i);
+	// Se crean todos los threads y se corren para que comiencen a atender mensajes
+	for(int i = 0; i < numeroThreads ; i ++){
+		System.out.println("Se creó el Thread: "+i);
 		Thread t = new Thread(new Runnable(){
 
 			@Override
 			public void run() {
-				// TODO Auto-generated method stub
-			// implementar
+
 				
 				while(!buffer.acabe.get())
 				{
@@ -29,7 +31,7 @@ public Servidor(int num, Buffer b){
 						temp.aumentarNumero();
 					}
 				}
-				System.out.println("acabe de atender"+buffer.acabe.get());
+				System.out.println("Acabé mi labor como Thread");
 			}
 			
 		});
@@ -51,7 +53,7 @@ public Servidor(int num, Buffer b){
 			FileInputStream in = new FileInputStream( arch );
 			datos.load( in );
 			
-			System.out.println("clientes: "+datos.getProperty("numeroClientes"));
+			//System.out.println("clientes: "+datos.getProperty("numeroClientes"));
 			
 			in.close( );
 		}
