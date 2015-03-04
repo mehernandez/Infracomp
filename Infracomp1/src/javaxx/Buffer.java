@@ -69,9 +69,7 @@ public class Buffer {
 		if(numClientes == 0){
 			acabe = true;
 		}
-		else{
-			acabe=false;
-		}
+
 		
 	}
 	
