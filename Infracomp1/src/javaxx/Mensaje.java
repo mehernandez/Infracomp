@@ -19,7 +19,7 @@ public class Mensaje {
 	public synchronized void aumentarNumero(){
 		numero ++;
 		this.notify();
-		System.out.println("Mensaje de: "+id);
+//		System.out.println("Mensaje de: "+id);
 	}
 	
 	public synchronized boolean enviarse(){

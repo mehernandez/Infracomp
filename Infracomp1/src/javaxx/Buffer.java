@@ -2,12 +2,13 @@ package javaxx;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Buffer {
 
 	private List<Mensaje> mensajes ;
 	private int capacidad;
-	private boolean acabe;
+	public AtomicBoolean acabe;
 	private int numClientes;
 	
 
@@ -18,7 +19,7 @@ public class Buffer {
 		
 		mensajes = new ArrayList<Mensaje>();
 		
-		acabe=false;
+		acabe=new AtomicBoolean(false);
 		
 		numClientes = numC;
 	}
@@ -60,15 +61,18 @@ public class Buffer {
 	}
 	
 	public synchronized boolean acabe(){
-		return acabe;
+		return acabe.get();
 	}
 	
 	public synchronized void notificarSalida(){
 		
 		numClientes --;
 		if(numClientes == 0){
-			acabe = true;
+			acabe.set(true);
+			notifyAll();
 		}
+		System.out.println(numClientes);
+		System.out.println(acabe);
 	}
 	
 }
