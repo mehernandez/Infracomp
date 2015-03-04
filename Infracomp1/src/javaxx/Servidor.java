@@ -21,7 +21,7 @@ public Servidor(int num, Buffer b){
 				// TODO Auto-generated method stub
 			// implementar
 				
-				while(buffer.acabe())
+				while(!buffer.acabe())
 				{
 					Mensaje temp=buffer.pedir();
 					if(temp!=null)
@@ -35,6 +35,7 @@ public Servidor(int num, Buffer b){
 		});
 		t.start();
 	}
+	
 	
 }
 

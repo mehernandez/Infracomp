@@ -12,11 +12,6 @@ public class Cliente extends Thread{
 		numeroMensajes = num;
 	}
 	
-	public synchronized void avisar()
-	{
-		
-	}
-	
 	public synchronized void enviar(Mensaje m){
 
         boolean ya = false;
@@ -49,6 +44,7 @@ public class Cliente extends Thread{
 		   enviar(m);
 			
 		}
+		buffer.notificarSalida();
 	}
 	
 }

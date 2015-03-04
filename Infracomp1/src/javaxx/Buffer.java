@@ -44,13 +44,13 @@ public class Buffer {
 	public synchronized Mensaje pedir(){
 		if(!mensajes.isEmpty())
 		{
-			Mensaje ac=mensajes.get(0);
-			mensajes.remove(0);
+			Mensaje ac=mensajes.remove(0);
 		   return ac;
 		}
 		else{
 			try {
 				this.wait();
+//				acabe=true;
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -66,9 +66,11 @@ public class Buffer {
 	public synchronized void notificarSalida(){
 		
 		numClientes --;
-		
 		if(numClientes == 0){
 			acabe = true;
+		}
+		else{
+			acabe=false;
 		}
 		
 	}
