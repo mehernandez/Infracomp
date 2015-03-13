@@ -45,7 +45,7 @@ public Servidor(int numeroThreads, Buffer pBuffer){
 
 	public static void main(String[] args) {
 		//leer archivo
-		File arch = new File("./properties/config.properties");
+		File arch = new File("./properties/config1.properties");
 		Properties datos = new Properties( );
 
 		try
