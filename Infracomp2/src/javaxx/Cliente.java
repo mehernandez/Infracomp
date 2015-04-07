@@ -1,37 +1,34 @@
 package javaxx;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
-import java.io.PrintWriter;
 import java.math.BigInteger;
 import java.net.Socket;
+import java.nio.ByteBuffer;
 import java.security.GeneralSecurityException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
-import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.security.SecureRandom;
-import java.security.Signature;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.Date;
 
 import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 import javax.security.auth.x500.X500Principal;
+import javax.xml.bind.DatatypeConverter;
 
 import org.bouncycastle.x509.X509V3CertificateGenerator;
-
-import sun.security.x509.*;
 
 public class Cliente {
 
 	private KeyPair key;
+	private Socket echoSocket;
 
 	public Cliente(){
 
@@ -45,7 +42,7 @@ public class Cliente {
 
 
 			//  Socket echoSocket = new Socket("186.114.241.116", 443);
-			Socket echoSocket = new Socket("infracomp.virtual.uniandes.edu.co", 443);
+		echoSocket = new Socket("infracomp.virtual.uniandes.edu.co", 443);
 			//	Socket echoSocket = new Socket("186.114.241.116", 80);   // sin seg
 			PrintStream out =
 					new PrintStream(echoSocket.getOutputStream());
@@ -97,6 +94,8 @@ public class Cliente {
 					InputStream inputCert = new ByteArrayInputStream(bytesRecibidos);
 					X509Certificate serverCert = (X509Certificate)certificateCreator.generateCertificate(inputCert);
 
+					
+					PublicKey llavePublicaSer = serverCert.getPublicKey();
 
 					// Se obtiene el mensaje con la llave cifrada
 
@@ -105,32 +104,39 @@ public class Cliente {
 					System.out.println(k);
 
 					String llaveStr = k.split(":")[1];
-
-					String llaveFull = this.descifrar(llaveStr.getBytes(), key);
-
-					System.out.println("La llave es : ");
-
+					
+					SecretKey llaveSimetricaServ = this.extraerLlaveSim(llaveStr);
+					
+					System.out.println(llaveSimetricaServ);
+					
+					
 
 					// Se inicia la actualización
-					if(k.equals("INIT")){
+					
 
-						out.println("ACT1");
+					Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+					cipher.init(Cipher.ENCRYPT_MODE, llaveSimetricaServ);
 
-						out.println("ACT2");
+					byte[] ubicacionCifrada = cipher.doFinal("4124.2028,210.4418".getBytes());
 
+					
+					// Se envía la primera actualización
+					out.print("ACT1:");
+					echoSocket.getOutputStream().write(ubicacionCifrada);
+					echoSocket.getOutputStream().flush();
+
+
+					// Se envía la segunda actualización
+					out.print("ACT2:");
+					echoSocket.getOutputStream().write(ubicacionCifrada);
+					echoSocket.getOutputStream().flush();
+					
+					// Se lee la respuesta final
+					
 						k = in.readLine();
 
 						System.out.println(k);
-
-
-					}
-
 				}
-
-
-
-
-
 
 			}
 			echoSocket.close();
@@ -139,6 +145,12 @@ public class Cliente {
 		catch(Exception e){
 			e.printStackTrace();
 
+			try {
+				echoSocket.close();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 
 		}
 
@@ -186,6 +198,29 @@ public class Cliente {
 			e.printStackTrace();
 		}
 		return res;
+	}
+	
+	
+	public SecretKey extraerLlaveSim(String texto){
+
+		try{
+
+			Cipher cifrador = Cipher.getInstance("RSA");
+			cifrador.init(Cipher.DECRYPT_MODE, key.getPrivate());
+
+			byte[] bytesLlaveCifrada = DatatypeConverter.parseHexBinary(texto);
+			byte[] bytesLlaveDescifrada = cifrador.doFinal(bytesLlaveCifrada);
+			String simKey = new String(bytesLlaveDescifrada);
+
+			System.out.println("Llave simetrica: " + simKey);
+			SecretKey simetricKey = new SecretKeySpec(bytesLlaveDescifrada,0,bytesLlaveDescifrada.length,"AES");
+			
+			return simetricKey;
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 
