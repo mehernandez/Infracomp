@@ -6,9 +6,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.math.BigInteger;
 import java.net.Socket;
-import java.nio.ByteBuffer;
 import java.security.GeneralSecurityException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -18,13 +18,16 @@ import java.security.cert.X509Certificate;
 import java.util.Date;
 
 import javax.crypto.Cipher;
+import javax.crypto.Mac;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import javax.security.auth.x500.X500Principal;
 import javax.xml.bind.DatatypeConverter;
 
+import org.bouncycastle.util.encoders.Hex;
 import org.bouncycastle.x509.X509V3CertificateGenerator;
 
+@SuppressWarnings("deprecation")
 public class Cliente {
 
 	private KeyPair key;
@@ -42,20 +45,24 @@ public class Cliente {
 
 
 			//  Socket echoSocket = new Socket("186.114.241.116", 443);
-		echoSocket = new Socket("infracomp.virtual.uniandes.edu.co", 443);
+			echoSocket = new Socket("infracomp.virtual.uniandes.edu.co", 443);
 			//	Socket echoSocket = new Socket("186.114.241.116", 80);   // sin seg
 			PrintStream out =
 					new PrintStream(echoSocket.getOutputStream());
+			
+			PrintWriter out2 = new PrintWriter(echoSocket.getOutputStream(), true);
 			BufferedReader in =
 					new BufferedReader(
 							new InputStreamReader(echoSocket.getInputStream()));
 			// saludo
+
 			out.println("HOLA");
 			String k = in.readLine();
 			System.out.println(k);
 
-			// Envio de algoritmos   no esta respondiendo
-			out.println("ALGORITMOS:DES:RSA:HMACMD5");
+			// Envio de algoritmos 
+
+			out.println("ALGORITMOS:RC4:RSA:HMACMD5");
 
 			k = in.readLine();
 
@@ -63,82 +70,94 @@ public class Cliente {
 
 			// Envío de certificado
 
-			if(k.equals("ESTADO:OK")){
+			if(!k.equals("ESTADO:OK")){
 
-
-
-
-				out.println("CERCLNT");
-				X509Certificate cert = generateCertificate(key);
-				byte[] myByte = cert.getEncoded();
-				echoSocket.getOutputStream().write(myByte);
-				echoSocket.getOutputStream().flush();
-
-				// Autenticación de servidor
-
-				k  = in.readLine();
-
-				System.out.println(k);
-
-				if(k.equals("CERTSRV")){
-
-
-
-
-					// Se obtiene el certificado del servidor
-
-					//					int tamBuffer = echoSocket.getReceiveBufferSize();
-					byte[] bytesRecibidos = new byte[520];
-					echoSocket.getInputStream().read(bytesRecibidos, 0, 520);
-					CertificateFactory certificateCreator = CertificateFactory.getInstance("X.509");
-					InputStream inputCert = new ByteArrayInputStream(bytesRecibidos);
-					X509Certificate serverCert = (X509Certificate)certificateCreator.generateCertificate(inputCert);
-
-					
-					PublicKey llavePublicaSer = serverCert.getPublicKey();
-
-					// Se obtiene el mensaje con la llave cifrada
-
-					k = in.readLine();
-
-					System.out.println(k);
-
-					String llaveStr = k.split(":")[1];
-					
-					SecretKey llaveSimetricaServ = this.extraerLlaveSim(llaveStr);
-					
-					System.out.println(llaveSimetricaServ);
-					
-					
-
-					// Se inicia la actualización
-					
-
-					Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-					cipher.init(Cipher.ENCRYPT_MODE, llaveSimetricaServ);
-
-					byte[] ubicacionCifrada = cipher.doFinal("4124.2028,210.4418".getBytes());
-
-					
-					// Se envía la primera actualización
-					out.print("ACT1:");
-					echoSocket.getOutputStream().write(ubicacionCifrada);
-					echoSocket.getOutputStream().flush();
-
-
-					// Se envía la segunda actualización
-					out.print("ACT2:");
-					echoSocket.getOutputStream().write(ubicacionCifrada);
-					echoSocket.getOutputStream().flush();
-					
-					// Se lee la respuesta final
-					
-						k = in.readLine();
-
-						System.out.println(k);
-				}
-
+				throw new Exception("Al enviar los algoritmos , el servidor no responde correctamente :"+k);
 			}
+
+
+
+			out.println("CERCLNT");
+			X509Certificate cert = generateCertificate(key);
+			byte[] myByte = cert.getEncoded();
+			echoSocket.getOutputStream().write(myByte);
+			echoSocket.getOutputStream().flush();
+
+			// Autenticación de servidor
+
+			k  = in.readLine();
+
+			System.out.println(k);
+
+			if(!k.equals("CERTSRV")){
+				throw new Exception("Al enviar el certificado , el servidor no esta respondiendo correctamente :"+k);
+			}
+
+
+			// Se obtiene el certificado del servidor
+
+			//					int tamBuffer = echoSocket.getReceiveBufferSize();
+			byte[] bytesRecibidos = new byte[520];
+			echoSocket.getInputStream().read(bytesRecibidos, 0, 520);
+			CertificateFactory certificateCreator = CertificateFactory.getInstance("X.509");
+			InputStream inputCert = new ByteArrayInputStream(bytesRecibidos);
+			X509Certificate serverCert = (X509Certificate)certificateCreator.generateCertificate(inputCert);
+
+
+			PublicKey llavePublicaSer = serverCert.getPublicKey();
+
+			// Se obtiene el mensaje con la llave cifrada
+
+			k = in.readLine();
+
+			System.out.println(k);
+
+			String llaveStr = k.split(":")[1];
+
+			SecretKey llaveSimetricaServ = this.extraerLlaveSim(llaveStr);
+
+			System.out.println(llaveSimetricaServ);
+
+
+
+			// Se inicia la actualización
+
+
+			Cipher encripter = Cipher.getInstance("RC4");
+			encripter.init(Cipher.ENCRYPT_MODE, llaveSimetricaServ);
+
+			byte[] encriptedLocation = encripter.doFinal("2212,300.9090".getBytes());
+			String hexaLocation = Hex.toHexString( encriptedLocation );
+
+
+			// Se envía la primera actualización
+
+			out2.println("ACT1:"+hexaLocation);
+
+
+			// Se envía la segunda actualización
+
+			Mac macCode = Mac.getInstance("HMACMD5");
+			macCode.init(llaveSimetricaServ);
+			byte[] locationBytes = macCode.doFinal("2212,300.9090".getBytes());
+
+			encripter = Cipher.getInstance(llavePublicaSer.getAlgorithm());
+			encripter.init(Cipher.ENCRYPT_MODE, llavePublicaSer);
+			byte[] encriptedLocationMac =encripter.doFinal(locationBytes);
+			String hexaLocation2 = Hex.toHexString( encriptedLocationMac );
+
+
+			out2.println("ACT2:"+hexaLocation2);
+
+
+			// Se lee la respuesta final
+
+			k = in.readLine();
+
+			System.out.println(k);
+
+
+
 			echoSocket.close();
 
 		}
@@ -148,7 +167,7 @@ public class Cliente {
 			try {
 				echoSocket.close();
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
+			
 				e1.printStackTrace();
 			}
 
@@ -184,23 +203,7 @@ public class Cliente {
 		return certificado;
 	}   
 
-	public String descifrar(byte[] cipheredText, KeyPair key) {
 
-		String res = "";
-		try{
-			Cipher cipher = Cipher.getInstance("RSA");
-			cipher.init(Cipher.DECRYPT_MODE, key.getPrivate());
-			byte [] clearText = cipher.doFinal(cipheredText);
-			res = new String(clearText);
-
-		}catch(Exception e ){
-
-			e.printStackTrace();
-		}
-		return res;
-	}
-	
-	
 	public SecretKey extraerLlaveSim(String texto){
 
 		try{
@@ -210,11 +213,9 @@ public class Cliente {
 
 			byte[] bytesLlaveCifrada = DatatypeConverter.parseHexBinary(texto);
 			byte[] bytesLlaveDescifrada = cifrador.doFinal(bytesLlaveCifrada);
-			String simKey = new String(bytesLlaveDescifrada);
 
-			System.out.println("Llave simetrica: " + simKey);
-			SecretKey simetricKey = new SecretKeySpec(bytesLlaveDescifrada,0,bytesLlaveDescifrada.length,"AES");
-			
+			SecretKey simetricKey = new SecretKeySpec(bytesLlaveDescifrada,0,bytesLlaveDescifrada.length,"RC4");
+
 			return simetricKey;
 		}
 		catch(Exception e){
@@ -225,6 +226,7 @@ public class Cliente {
 
 
 	public static void main(String[] args) {
+		@SuppressWarnings("unused")
 		Cliente c = new Cliente();
 	}
 
