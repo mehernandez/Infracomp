@@ -27,6 +27,8 @@ import java.util.concurrent.Semaphore;
  */
 public class Servidor extends Thread {
 
+	private static Estadistica estadistica ;
+	
 	/**
 	 * Constante que especifica el tiempo máximo en milisegundos que se esperara 
 	 * por la respuesta de un cliente en cada una de las partes de la comunicación
@@ -41,7 +43,7 @@ public class Servidor extends Thread {
 	/**
 	 * Puerto en el cual escucha el servidor.
 	 */
-	public static final int PUERTO = 8080;
+	public static final int PUERTO = 8081;
 
 	/**
 	 * El socket que permite recibir requerimientos por parte de clientes.
@@ -66,6 +68,7 @@ public class Servidor extends Thread {
 	 */
 	public static void main(String[] args) throws IOException {
 
+		Estadistica estadistica = new Estadistica();
 		// Adiciona la libreria como un proveedor de seguridad.
 		// Necesario para crear llaves.
 		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());		
@@ -80,7 +83,7 @@ public class Servidor extends Thread {
 		ExecutorService executorService = Executors.newFixedThreadPool(N_THREADS);
 		//Servidor [] threads = new Servidor[N_THREADS];
 		for ( int i = 0 ; i < N_THREADS ; i++) {
-			executorService.execute( new Servidor(i, semaphore));
+			executorService.execute( new Servidor(i, semaphore,estadistica));
 		}
 		
 	
@@ -106,9 +109,10 @@ public class Servidor extends Thread {
 	 *             Si hubo un problema con el semaforo.
 	 * @throws SocketException 
 	 */
-	public Servidor(int id, Semaphore semaphore) throws  SocketException {
+	public Servidor(int id, Semaphore semaphore, Estadistica esta) throws  SocketException {
 		this.id = id;
 		this.semaphore = semaphore;
+		estadistica = esta;
 		//this.start();
 	}
 
@@ -139,7 +143,7 @@ public class Servidor extends Thread {
 			}
 			semaphore.release();
 			System.out.println("Thread " + id + " recibe a un cliente.");
-			Protocolo.atenderCliente(s);
+			Protocolo.atenderCliente(s, estadistica);
 		}
 	}
 

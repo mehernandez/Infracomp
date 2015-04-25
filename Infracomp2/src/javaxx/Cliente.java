@@ -43,13 +43,13 @@ public class Cliente {
 			generator.initialize(1024);
 			key = generator.generateKeyPair();
 
-
-			//  Socket echoSocket = new Socket("186.114.241.116", 443);
-			echoSocket = new Socket("infracomp.virtual.uniandes.edu.co", 443);
+			//aqui esta la direccion y puerto que debe cambiar		
+			echoSocket = new Socket("localhost", 8081);
+			//echoSocket = new Socket("infracomp.virtual.uniandes.edu.co", 443);
 			//	Socket echoSocket = new Socket("186.114.241.116", 80);   // sin seg
 			PrintStream out =
 					new PrintStream(echoSocket.getOutputStream());
-			
+
 			PrintWriter out2 = new PrintWriter(echoSocket.getOutputStream(), true);
 			BufferedReader in =
 					new BufferedReader(
@@ -167,7 +167,7 @@ public class Cliente {
 			try {
 				echoSocket.close();
 			} catch (IOException e1) {
-			
+
 				e1.printStackTrace();
 			}
 

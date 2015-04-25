@@ -36,6 +36,10 @@ import utils.Transformacion;
  * @author José Miguel Suárez Lopera 		-  201510
  */
 public class Protocolo {
+	
+
+	
+	
 
 	// ----------------------------------------------------
 	// CONSTANTES DE CONTROL DE IMPRESION EN CONSOLA
@@ -100,7 +104,7 @@ public class Protocolo {
 		if(SHOW_OUT)		System.out.println(">>SERV: " + msg);
 	}
 
-	public static void atenderCliente(Socket s){
+	public static void atenderCliente(Socket s, Estadistica esta){
 		try{
 			PrintWriter writer = new PrintWriter(s.getOutputStream(), true);
 			BufferedReader reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
@@ -160,6 +164,10 @@ public class Protocolo {
 			// int read = s.getInputStream().read(receiver, 0, 7);
 
 			linea = read(reader);
+			
+			// inicio indicador 1
+			long ini1 = System.nanoTime();
+			//
 			if (!linea.equals(CERCLNT)) {
 				write(writer, ERROR_FORMATO + ":" + linea);
 				throw new FontFormatException(CERCLNT);
@@ -192,6 +200,12 @@ public class Protocolo {
 			// Transforma la llave simertrica y la envia
 			write(writer, INIT + SEPARADOR + Transformacion.codificar(ciphertext1));
 
+			// fin indicador 1
+	
+			long fin1 = System.nanoTime();
+			long resta = fin1 - ini1;
+			esta.agregrarTiempoIntercambioLlave(resta);
+			
 
 			// ////////////////////////////////////////////////////////////////////////
 			// Recibe la posicion del usuario.
