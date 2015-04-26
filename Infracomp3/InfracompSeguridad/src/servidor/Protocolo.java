@@ -212,6 +212,10 @@ public class Protocolo {
 			// ////////////////////////////////////////////////////////////////////////
 
 			linea = read(reader);
+			
+			// Inicio indicador 2
+			long ini2 = System.nanoTime();
+
 			if (!(linea.contains(SEPARADOR) && linea.split(SEPARADOR)[0].equals(ACT1))) {
 				write(writer, ERROR_FORMATO);
 				throw new FontFormatException(linea);
@@ -232,17 +236,23 @@ public class Protocolo {
 			// ////////////////////////////////////////////////////////////////////////
 			// Recibe el resultado de la transaccion y termina la conexion.
 			// ////////////////////////////////////////////////////////////////////////
+			long fin2 = System.nanoTime();
+			long resta2 = fin2 - ini2;
+			esta.agregrarTiempoInfoPosicion(resta2);
 			write(writer, RTA + SEPARADOR + (verificacion? OK:ERROR));
 
 			System.out.println("Termino requerimientos del cliente en perfectas condiciones.");
 		} catch (NullPointerException e) {
 			// Probablemente la conexion fue interrumpida.
+			esta.agregarConexionPerdida();
 			printError(e);
 		} catch (IOException e) {
 			// Error en la conexion con el cliente.
+			esta.agregarConexionPerdida();
 			printError(e);
 		} catch (FontFormatException e) {
 			// Si hubo errores en el protocolo por parte del cliente.
+			esta.agregarConexionPerdida();
 			printError(e);
 		} catch (NoSuchAlgorithmException e) {
 			// Si los algoritmos enviados no son soportados por el servidor.
@@ -250,45 +260,56 @@ public class Protocolo {
 		} catch (NoSuchProviderException e) {
 			// Error en adicionar el proveedor de seguridad.
 			// No deberia alcanzarce en condiciones normales de ejecuci��n.
+			esta.agregarConexionPerdida();
 			printError(e);
 		} catch (CertificateEncodingException e) {
 			// El certificado no se pudo serializar.
 			// No deberia alcanzarce en condiciones normales de ejecuci��n.
+			esta.agregarConexionPerdida();
 			printError(e);
 		} catch (InvalidKeyException e) {
 			// El certificado no se pudo generar.
 			// No deberia alcanzarce en condiciones normales de ejecuci��n.
+			esta.agregarConexionPerdida();
 			printError(e);
 		} catch (SignatureException e) {
 			// El certificado no se pudo generar.
 			// No deberia alcanzarce en condiciones normales de ejecuci��n.
+			esta.agregarConexionPerdida();
 			printError(e);
 		} catch (IllegalStateException e) {
 			// El certificado no se pudo generar.
 			// No deberia alcanzarce en condiciones normales de ejecuci��n.
+			esta.agregarConexionPerdida();
 			printError(e);
 		} catch (CertificateException e) {
 			// El certificado no se pudo generar.
 			// No deberia alcanzarce en condiciones normales de ejecuci��n.
+			esta.agregarConexionPerdida();
 			printError(e);
 		} catch (CertificateNotYetValidException e) {
 			// El certificado del cliente no se pudo recuperar.
 			// El cliente deberia revisar la creacion y envio de su
 			// certificado.
+			esta.agregarConexionPerdida();
 			printError(e);
 		} catch (NoSuchPaddingException e) {
 			// Error en el proceso de encripcion de datos del servidor.
+			esta.agregarConexionPerdida();
 			printError(e);
 		} catch (IllegalBlockSizeException e) {
 			// No se pudo generar un sobre digital sobre la llave simetrica.
 			// No deberia alcanzarce en condiciones normales de ejecuci��n.
+			esta.agregarConexionPerdida();
 			printError(e);
 		} catch (BadPaddingException e) {
 			// No se pudo generar un sobre digital sobre la llave simetrica.
 			// No deberia alcanzarce en condiciones normales de ejecuci��n.
+			esta.agregarConexionPerdida();
 			printError(e);
 		} catch (Exception e) {
 			// El cliente reporto que la informacion fue infructuosa.
+			esta.agregarConexionPerdida();
 			printError(e);
 		} finally {
 			try {

@@ -69,6 +69,8 @@ public class Servidor extends Thread {
 	public static void main(String[] args) throws IOException {
 
 		Estadistica estadistica = new Estadistica();
+		
+
 		// Adiciona la libreria como un proveedor de seguridad.
 		// Necesario para crear llaves.
 		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());		
@@ -85,6 +87,8 @@ public class Servidor extends Thread {
 		for ( int i = 0 ; i < N_THREADS ; i++) {
 			executorService.execute( new Servidor(i, semaphore,estadistica));
 		}
+		
+
 		
 	
 		//executorService.shutdown();
@@ -113,6 +117,8 @@ public class Servidor extends Thread {
 		this.id = id;
 		this.semaphore = semaphore;
 		estadistica = esta;
+		
+
 		//this.start();
 	}
 

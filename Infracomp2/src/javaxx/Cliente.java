@@ -32,9 +32,11 @@ public class Cliente {
 
 	private KeyPair key;
 	private Socket echoSocket;
+	private Estadistica estadistica;
 
-	public Cliente(){
+	public Cliente(Estadistica est){
 
+		estadistica = est;
 
 
 		try{
@@ -47,6 +49,7 @@ public class Cliente {
 			echoSocket = new Socket("localhost", 8081);
 			//echoSocket = new Socket("infracomp.virtual.uniandes.edu.co", 443);
 			//	Socket echoSocket = new Socket("186.114.241.116", 80);   // sin seg
+			echoSocket.setSoTimeout(5000);
 			PrintStream out =
 					new PrintStream(echoSocket.getOutputStream());
 
@@ -162,6 +165,7 @@ public class Cliente {
 
 		}
 		catch(Exception e){
+			estadistica.aumentarConexionPerdida();
 			e.printStackTrace();
 
 			try {
@@ -226,8 +230,9 @@ public class Cliente {
 
 
 	public static void main(String[] args) {
+		
 		@SuppressWarnings("unused")
-		Cliente c = new Cliente();
+		Cliente c = new Cliente(new Estadistica());
 	}
 
 }

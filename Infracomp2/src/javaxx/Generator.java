@@ -7,13 +7,16 @@ import uniandes.gload.examples.clientserver.generator.ClientServerTask;
 public class Generator {
 
 	private LoadGenerator generator;
+	private static Estadistica estadistica;
 
 	public Generator(){
 		Task work = createTask();
-		int numberOfTasks = 100;
-		int gapBetweenTasks = 1000;
+		int numberOfTasks = 10;
+		int gapBetweenTasks = 0;
+		estadistica = new Estadistica();
 		generator = new LoadGenerator("Client-Server load test", numberOfTasks ,work , gapBetweenTasks);
 		generator.generate();
+		
 	}
 	
 	public Task createTask(){
@@ -21,7 +24,7 @@ public class Generator {
 			
 			@Override
 			public void execute() {
-				Cliente c = new Cliente();
+				Cliente c = new Cliente(estadistica);
 //				System.out.println("hola");
 			}
 		};
