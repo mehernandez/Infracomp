@@ -46,10 +46,10 @@ public class Cliente {
 			key = generator.generateKeyPair();
 
 			//aqui esta la direccion y puerto que debe cambiar		
-			echoSocket = new Socket("localhost", 8081);
+			echoSocket = new Socket("157.253.202.27", 8081);
 			//echoSocket = new Socket("infracomp.virtual.uniandes.edu.co", 443);
 			//	Socket echoSocket = new Socket("186.114.241.116", 80);   // sin seg
-			echoSocket.setSoTimeout(5000);
+			echoSocket.setSoTimeout(10000);
 			PrintStream out =
 					new PrintStream(echoSocket.getOutputStream());
 
