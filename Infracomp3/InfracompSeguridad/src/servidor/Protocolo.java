@@ -204,7 +204,7 @@ public class Protocolo {
 	
 			long fin1 = System.nanoTime();
 			long resta = fin1 - ini1;
-			esta.agregrarTiempoIntercambioLlave(resta);
+			//esta.agregrarTiempoIntercambioLlave(resta);
 			
 
 			// ////////////////////////////////////////////////////////////////////////
@@ -238,7 +238,8 @@ public class Protocolo {
 			// ////////////////////////////////////////////////////////////////////////
 			long fin2 = System.nanoTime();
 			long resta2 = fin2 - ini2;
-			esta.agregrarTiempoInfoPosicion(resta2);
+			//esta.agregrarTiempoInfoPosicion(resta2);
+			esta.agregarRegistro(resta, resta2);
 			write(writer, RTA + SEPARADOR + (verificacion? OK:ERROR));
 
 			System.out.println("Termino requerimientos del cliente en perfectas condiciones.");

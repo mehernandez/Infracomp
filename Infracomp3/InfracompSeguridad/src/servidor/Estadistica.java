@@ -76,18 +76,23 @@ public class Estadistica {
 		csv = "TiempoLlave , TiempoPosicion ";
 	}
 
-	public synchronized void agregrarTiempoIntercambioLlave(long t){
+	public  void agregrarTiempoIntercambioLlave(long t){
 		numeroConexionesLlave ++;
 		tiempoIntercambioLlave = (tiempoIntercambioLlave + t ) / numeroConexionesLlave;
 		csv += "\n"+t;
 		this.guardar();
 	}
-	public synchronized void agregrarTiempoInfoPosicion(long t){
+	public  void agregrarTiempoInfoPosicion(long t){
 		numeroConexionesPosicion ++;
 		tiempoInfoPosicion = (tiempoInfoPosicion + t ) / numeroConexionesPosicion;
 		csv += ","+t;
 		this.guardar();
 	}
+	public synchronized void agregarRegistro(long t1 , long t2){
+		this.agregrarTiempoIntercambioLlave(t1);
+		this.agregrarTiempoInfoPosicion(t2);
+	}
+	
 	public synchronized void agregarConexionPerdida(){
 		numeroConexionesPerdidas ++;
 		this.guardar();
