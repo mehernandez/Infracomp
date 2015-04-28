@@ -14,7 +14,7 @@ public class Estadistica {
 	private long tiempoInfoPosicion;
 	private int numeroConexionesPosicion;
 	private int numeroConexionesPerdidas;
-	private Properties props;
+	private Properties props; 
 	
 	
 	public void guardar(){
