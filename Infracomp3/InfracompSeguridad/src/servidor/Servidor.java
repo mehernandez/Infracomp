@@ -49,6 +49,8 @@ public class Servidor extends Thread {
 	 * El socket que permite recibir requerimientos por parte de clientes.
 	 */
 	private static ServerSocket socket;
+	
+	private static Socket socketNormi;
 
 	/**
 	 * El semaforo que permite tomar turnos para atender las solicitudes.
@@ -79,13 +81,17 @@ public class Servidor extends Thread {
 		socket = new ServerSocket(PUERTO);
 
 		// Crea un semaforo que da turnos para usar el socket.
-		Semaphore semaphore = new Semaphore(1);
+		//Semaphore semaphore = new Semaphore(1);
 
 		// Pool
 		ExecutorService executorService = Executors.newFixedThreadPool(N_THREADS);
 		//Servidor [] threads = new Servidor[N_THREADS];
-		for ( int i = 0 ; i < N_THREADS ; i++) {
-			executorService.execute( new Servidor(i, semaphore,estadistica));
+		int i = 1;
+		System.out.println("El servidor esta listo para aceptar conexiones.");
+		while (true) {
+			Socket s = socket.accept();
+			executorService.execute( new Servidor(i, s,estadistica));
+			i++;
 		}
 		
 
@@ -99,7 +105,7 @@ public class Servidor extends Thread {
 //		for ( int i = 0 ; i < N_THREADS ; i++) {
 //			threads[i] = new Servidor(i, semaphore);
 //		}
-		System.out.println("El servidor esta listo para aceptar conexiones.");
+		
 	}
 
 	/**
@@ -113,9 +119,9 @@ public class Servidor extends Thread {
 	 *             Si hubo un problema con el semaforo.
 	 * @throws SocketException 
 	 */
-	public Servidor(int id, Semaphore semaphore, Estadistica esta) throws  SocketException {
+	public Servidor(int id, Socket sock, Estadistica esta) throws  SocketException {
 		this.id = id;
-		this.semaphore = semaphore;
+		socketNormi = sock;
 		estadistica = esta;
 		
 
@@ -127,30 +133,10 @@ public class Servidor extends Thread {
 	 */
 	@Override
 	public void run() {
-		while (true) {
-			Socket s = null;
-			// ////////////////////////////////////////////////////////////////////////
-			// Recibe una conexion del socket.
-			// ////////////////////////////////////////////////////////////////////////
-
-			try {
-				semaphore.acquire();
-				s = socket.accept();
-				s.setSoTimeout(TIME_OUT);
-			} catch (IOException e) {
-				e.printStackTrace();
-				semaphore.release();
-				continue;
-			} catch (InterruptedException e) {
-				// Si hubo algun error tomando turno en el semaforo.
-				// No deberia alcanzarse en condiciones normales de ejecucion.
-				e.printStackTrace();
-				continue;
-			}
-			semaphore.release();
-			System.out.println("Thread " + id + " recibe a un cliente.");
-			Protocolo.atenderCliente(s, estadistica);
-		}
+		
+			System.out.println("Cliente  " + id + " atendido");
+			Protocolo.atenderCliente(socketNormi, estadistica);
+		
 	}
 
 
