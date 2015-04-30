@@ -135,7 +135,7 @@ public class Servidor extends Thread {
 	public void run() {
 		
 			System.out.println("Cliente  " + id + " atendido");
-			Protocolo.atenderCliente(socketNormi, estadistica);
+			ProtocoloSinSeguridad.atenderCliente(socketNormi, estadistica);
 		
 	}
 
