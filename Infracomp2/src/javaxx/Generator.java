@@ -11,7 +11,7 @@ public class Generator {
 
 	public Generator(){
 		Task work = createTask();
-		int numberOfTasks = 80;
+		int numberOfTasks = 600;
 		int gapBetweenTasks = 100;
 		estadistica = new Estadistica();
 		generator = new LoadGenerator("Client-Server load test", numberOfTasks ,work , gapBetweenTasks);

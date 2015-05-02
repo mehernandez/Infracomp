@@ -46,8 +46,8 @@ public class Cliente {
 			key = generator.generateKeyPair();
 
 			//aqui esta la direccion y puerto que debe cambiar		
-//			echoSocket = new Socket("157.253.239.23", 8081);
-			echoSocket = new Socket("infracomp.virtual.uniandes.edu.co", 80);
+			echoSocket = new Socket("127.0.0.1", 8081);
+//			echoSocket = new Socket("infracomp.virtual.uniandes.edu.co", 80);
 //			Socket echoSocket = new Socket("186.114.241.116", 80);   // sin seg
 			echoSocket.setSoTimeout(10000);
 			PrintStream out =
@@ -99,7 +99,7 @@ public class Cliente {
 
 			// Se obtiene el certificado del servidor
 
-			//					int tamBuffer = echoSocket.getReceiveBufferSize();
+//								int tamBuffer = echoSocket.getReceiveBufferSize();
 			byte[] bytesRecibidos = new byte[520];
 			echoSocket.getInputStream().read(bytesRecibidos, 0, 520);
 			CertificateFactory certificateCreator = CertificateFactory.getInstance("X.509");
@@ -115,43 +115,43 @@ public class Cliente {
 
 			System.out.println(k);
 
-			//String llaveStr = k.split(":")[1];
+			String llaveStr = k.split(":")[1];
 
-			//SecretKey llaveSimetricaServ = this.extraerLlaveSim(llaveStr);
+			SecretKey llaveSimetricaServ = this.extraerLlaveSim(llaveStr);
 
-			//System.out.println(llaveSimetricaServ);
+			System.out.println(llaveSimetricaServ);
 
 
 
 			// Se inicia la actualización
 
 
-			//Cipher encripter = Cipher.getInstance("RC4");
-			//encripter.init(Cipher.ENCRYPT_MODE, llaveSimetricaServ);
+			Cipher encripter = Cipher.getInstance("RC4");
+			encripter.init(Cipher.ENCRYPT_MODE, llaveSimetricaServ);
 
-			//byte[] encriptedLocation = encripter.doFinal("2212,300.9090".getBytes());
-			//String hexaLocation = Hex.toHexString( encriptedLocation );
+			byte[] encriptedLocation = encripter.doFinal("2212,300.9090".getBytes());
+			String hexaLocation = Hex.toHexString( encriptedLocation );
 
 
 			// Se envía la primera actualización
 
-			//out2.println("ACT1:"+hexaLocation);
-			out2.println("ACT1");
+			out2.println("ACT1:"+hexaLocation);
+//			out2.println("ACT1");
 
 			// Se envía la segunda actualización
 
-			//Mac macCode = Mac.getInstance("HMACMD5");
-			//macCode.init(llaveSimetricaServ);
-			//byte[] locationBytes = macCode.doFinal("2212,300.9090".getBytes());
+			Mac macCode = Mac.getInstance("HMACMD5");
+			macCode.init(llaveSimetricaServ);
+			byte[] locationBytes = macCode.doFinal("2212,300.9090".getBytes());
 
-			//encripter = Cipher.getInstance(llavePublicaSer.getAlgorithm());
-			//encripter.init(Cipher.ENCRYPT_MODE, llavePublicaSer);
-			//byte[] encriptedLocationMac =encripter.doFinal(locationBytes);
-			//String hexaLocation2 = Hex.toHexString( encriptedLocationMac );
+			encripter = Cipher.getInstance(llavePublicaSer.getAlgorithm());
+			encripter.init(Cipher.ENCRYPT_MODE, llavePublicaSer);
+			byte[] encriptedLocationMac =encripter.doFinal(locationBytes);
+			String hexaLocation2 = Hex.toHexString( encriptedLocationMac );
 
 
-			//out2.println("ACT2:"+hexaLocation2);
-			out2.println("ACT2");
+			out2.println("ACT2:"+hexaLocation2);
+//			out2.println("ACT2");
 
 			// Se lee la respuesta final
 
